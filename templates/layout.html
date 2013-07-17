@@ -1,0 +1,94 @@
+<html>
+<head>
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+    <link rel=stylesheet type=text/css href="{{ url_for('static',
+  filename='style.css') }}">
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">py3compat_checker</a>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid" style="margin-top: 40px; max-width:600px;">
+      <div class="row-fluid">
+        <div class="span12">
+
+            {% for message in get_flashed_messages() %}
+            <div class="alert">
+              {{ message }}
+            </div>
+            {% endfor %}
+
+            <h1>Check your requirements.txt for Python 3 compatibility</h1>
+
+            <h3>1. Upload your requirements.txt</h3>
+
+            <form action="{{ url_for('upload_file') }}" method=post enctype=multipart/form-data>
+                <p><input type=file name=file>
+                   <input type=submit value=Upload>
+            </form>
+
+            <h3> 2. See the result</h3>
+            <p>Pypi was checked if the setup.py contained a classifier marking the dependency as python 3 compatible. After you uploaded a requirements.txt you can see which of your dependencies is compatible with python 3 and with is not.</p>
+
+            {% if package_compatibility %}
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Package name</th>
+                  <th>Checked version</th>
+                  <th>Is Python 3 compatible</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for pack, res in package_compatibility.package_py3_compatibility.items() %}
+                <tr class="success">
+                    <td>{{pack}}</td>
+                    <td>{{res.checked_version}}</td>
+                    <td>
+                        {% if res.compatible %}Yes
+                        {% else %}
+                            {% if res.compatible == False %}No
+                            {% else %}No information on Pypi
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+
+            {% if package_compatibility.ignored %}
+            <div>
+                Ignored:
+                {{ package_compatibility.ignored }}
+            </div>
+            {% endif %}
+            {% endif %}
+
+        </div>
+      </div>
+    </div>
+
+      <hr>
+
+      <footer style="padding: 0 25px;">
+        <p>The source of this page is available at <a href="http://github.com/dmr/py3compat_checker">github (py3compat_checker)</a>. Create an account there and submit bugs or improvement ideas, or contribute pull requests. I'll be happy to include them!</p>
+      </footer>
+
+    </div>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+</body>
+</html>

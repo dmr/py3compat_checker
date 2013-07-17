@@ -1,0 +1,11 @@
+input {
+    font-size: 16px;
+    border: 1px solid black;
+    color: #335E79;
+    padding: 2px;
+}
+input[type="submit"] {
+    background: #CADEEB;
+    color: #335E79;
+    border-color: #335E79;
+}
